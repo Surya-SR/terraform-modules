@@ -11,17 +11,19 @@ resource "aws_instance" "ec2" {
   key_name = var.key_name
   vpc_security_group_ids = var.vpc_security_group_ids
 
-  connection {
-    host = self.public_ip
-    user = "ec2-user" #change the user name baed on the os
-    private_key = aws_key_pair.name
-
-  }
   ebs_block_device {
     device_name = "/dev/sda1"
     delete_on_termination = true
     encrypted = true
     volume_size = 20
+  }
+
+  #contains the information to execute cmds using provisioner
+  connection {
+    host = self.public_ip
+    user = "ec2-user" #change the user name baed on the os
+    private_key = aws_key_pair.name
+
   }
   provisioner "remote-exec" {
     inline = [ 
