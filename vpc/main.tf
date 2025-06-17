@@ -12,8 +12,9 @@ resource "aws_vpc" "us-east-1_vpc" {
 #setup public subnet
 
 resource "aws_subnet" "dev_proj_1_public_subnets" {
+  count = length(var.cidr_public_subnet)
   vpc_id                  = aws_vpc.us-east-1_vpc.id
-  cidr_block              = var.cidr_public_subnet
+  cidr_block              = element(var.cidr_public_subnet,count.index)
   availability_zone       = var.us_availability_zone
   map_public_ip_on_launch = false
 
@@ -26,7 +27,7 @@ resource "aws_subnet" "dev_proj_1_public_subnets" {
 resource "aws_subnet" "dev_proj_1_private_subnets" {
   count                   = length((var.cidr_public_subnet))
   vpc_id                  = aws_vpc.us-east-1_vpc.id
-  cidr_block              = var.cidr_private_subnet
+  cidr_block              = element(var.cidr_public_subnet,count.index)
   availability_zone       = var.us_availability_zone
   map_public_ip_on_launch = false
 
